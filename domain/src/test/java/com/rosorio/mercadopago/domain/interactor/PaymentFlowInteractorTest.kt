@@ -39,7 +39,7 @@ class PaymentFlowInteractorTest : AutoCloseKoinTest() {
     fun `should create new payment flow`() = runBlocking {
         clearInvocations(paymentFlowRepository)
         whenever(paymentFlowRepository.save(null)).thenReturn(PaymentFlow(1))
-        val paymentFlow = paymentFlowInteractor.createPaymentFlow()
+        val paymentFlow = paymentFlowInteractor.create()
 
 
         assertNotNull(paymentFlow)
@@ -55,12 +55,12 @@ class PaymentFlowInteractorTest : AutoCloseKoinTest() {
         clearInvocations(paymentFlowRepository)
         whenever(paymentFlowRepository.save(null)).thenReturn(PaymentFlow(1))
 
-        val paymentFlow = paymentFlowInteractor.createPaymentFlow()
+        val paymentFlow = paymentFlowInteractor.create()
         paymentFlow.amount = 5000
 
         whenever(paymentFlowRepository.save(paymentFlow)).thenReturn(PaymentFlow(1, 5000))
 
-        val updatedPaymentFlow = paymentFlowInteractor.updatePaymentFlow(paymentFlow)
+        val updatedPaymentFlow = paymentFlowInteractor.update(paymentFlow)
 
 
         assertNotNull(paymentFlow)

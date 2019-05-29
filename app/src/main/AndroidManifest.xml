@@ -13,7 +13,7 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             android:name=".PaymentApplication">
-        <activity android:name=".payment.MainActivity">
+        <activity android:name=".payment.PaymentFlowActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
