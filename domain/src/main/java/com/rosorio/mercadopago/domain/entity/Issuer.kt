@@ -1,5 +1,7 @@
 package com.rosorio.mercadopago.domain.entity
 
+import java.io.Serializable
+
 data class Issuer(
     val id: String,
     val name: String,
@@ -7,4 +9,4 @@ data class Issuer(
     val thumbnail: String,
     val processingMode: String,
     val merchantAccountId: String
-)
+): Serializable

@@ -1,5 +1,9 @@
 package com.rosorio.paymentapp.payment
 
+import com.rosorio.mercadopago.domain.entity.Issuer
+import com.rosorio.mercadopago.domain.entity.PayerCost
+import com.rosorio.mercadopago.domain.entity.PaymentMethod
+
 interface PaymentFlowContract {
     interface View {
         fun showLoading()
@@ -14,16 +18,20 @@ interface PaymentFlowContract {
 
         fun showSelectPaymentMethodFlowView()
 
-        fun showSelectIssuerFlowView()
+        fun showSelectIssuerFlowView(paymentMethod: PaymentMethod)
 
-        fun showSelectInstallmentsFlowView()
+        fun showSelectInstallmentsFlowView(amount: Int, paymentMethod: PaymentMethod, issuer: Issuer)
 
         fun openPaymentFlowStepContainer()
 
         fun closePaymentFlowStepContainer()
+
+        fun enableNextStepButton()
+
+        fun disableNextStepButton()
     }
 
-    interface Presenter<V : View> {
+    interface Presenter {
         var view: View
 
         var isNewFlow: Boolean
@@ -34,6 +42,11 @@ interface PaymentFlowContract {
 
         fun nextStep()
 
+        suspend fun updateAmount(amount: Int)
+
+        suspend fun updatePaymentMethod(paymentMethod: PaymentMethod)
+        suspend fun updateIssuer(issuer: Issuer)
+        suspend fun updatePayerCost(payerCost: PayerCost)
     }
 
     enum class Step {

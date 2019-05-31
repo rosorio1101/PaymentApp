@@ -1,5 +1,7 @@
 package com.rosorio.mercadopago.domain.entity
 
+import java.io.Serializable
+
 data class PayerCost(
     val installments: Int,
     val installmentRate: Double,
@@ -12,4 +14,4 @@ data class PayerCost(
     val recommendedMessage: String,
     val installmentAmount: Double,
     val totalAmount: Double
-)
+): Serializable

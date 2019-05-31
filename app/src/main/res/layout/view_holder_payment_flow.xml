@@ -45,6 +45,19 @@
                     app:layout_constraintEnd_toStartOf="@id/verticalGuide1"/>
 
             <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/labelAmount"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Monto"
+                    android:textSize="14sp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/colorPrimary"
+                    app:layout_constraintTop_toBottomOf="@id/labelId"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/verticalGuide1"/>
+
+
+            <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/labelPaymentMethodName"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -53,7 +66,7 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="@color/colorPrimary"
                     android:layout_marginTop="4dp"
-                    app:layout_constraintTop_toBottomOf="@id/labelId"
+                    app:layout_constraintTop_toBottomOf="@id/labelAmount"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/verticalGuide1"/>
 
@@ -109,18 +122,28 @@
                     app:layout_constraintEnd_toEndOf="parent"/>
 
             <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/paymentFlowAmount"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    app:layout_constraintTop_toBottomOf="@id/paymentFlowId"
+                    app:layout_constraintStart_toEndOf="@id/verticalGuide1"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/paymentMethodName"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:textSize="14sp"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:layout_marginTop="4dp"
-                    app:layout_constraintTop_toBottomOf="@id/paymentFlowId"
+                    app:layout_constraintTop_toBottomOf="@id/paymentFlowAmount"
                     app:layout_constraintStart_toEndOf="@id/verticalGuide1"
                     app:layout_constraintEnd_toEndOf="parent"/>
 
             <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/issuerdName"
+                    android:id="@+id/issuerName"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:textSize="14sp"
@@ -137,7 +160,7 @@
                     android:textSize="14sp"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:layout_marginTop="4dp"
-                    app:layout_constraintTop_toBottomOf="@id/issuerdName"
+                    app:layout_constraintTop_toBottomOf="@id/issuerName"
                     app:layout_constraintStart_toEndOf="@id/verticalGuide1"
                     app:layout_constraintEnd_toEndOf="parent"/>
 

@@ -4,14 +4,20 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.rosorio.mercadopago.domain.entity.Issuer
+import com.rosorio.mercadopago.domain.entity.PayerCost
+import com.rosorio.mercadopago.domain.entity.PaymentMethod
 import com.rosorio.paymentapp.R
-import com.rosorio.paymentapp.flow.SelectAmountFlowFragment
-import com.rosorio.paymentapp.flow.SelectInstallmentsFlowFragment
-import com.rosorio.paymentapp.flow.SelectIssuerFlowFragment
-import com.rosorio.paymentapp.flow.SelectPaymentMethodFlowFragment
+import com.rosorio.paymentapp.extensions.hideKeyboard
+import com.rosorio.paymentapp.flow.amount.SelectAmountFlowContract
+import com.rosorio.paymentapp.flow.issuer.SelectIssuerFlowContract
+import com.rosorio.paymentapp.flow.payercost.SelectPayerCostFlowContract
+import com.rosorio.paymentapp.flow.payercost.SelectPayerCostFlowFragment
+import com.rosorio.paymentapp.flow.paymentmethod.SelectPaymentMethodFlowContract
 import kotlinx.android.synthetic.main.activity_payment_flow.*
 import kotlinx.android.synthetic.main.payment_empty_view.*
 import kotlinx.android.synthetic.main.payment_flow_container.*
@@ -20,13 +26,23 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.android.scope.currentScope
 
-class PaymentFlowActivity : AppCompatActivity(), PaymentFlowContract.View {
+class PaymentFlowActivity : AppCompatActivity(),
+    PaymentFlowContract.View,
+    SelectAmountFlowContract.OnAmountListener,
+    SelectPaymentMethodFlowContract.OnPaymentMethodListener,
+    SelectIssuerFlowContract.OnIssuerListener,
+    SelectPayerCostFlowContract.OnPayerCostListener {
 
     private val TAG = "PaymentFlowActivity"
 
-    private val presenter: PaymentFlowContract.Presenter<PaymentFlowActivity> by currentScope.inject()
+    private val presenter: PaymentFlowContract.Presenter by currentScope.inject()
 
     private val paymentFlowAdapter: PaymentFlowAdapter by currentScope.inject()
+
+    private val selectAmountFlowView: SelectAmountFlowContract.View by currentScope.inject()
+    private val selectPaymentMethodFlowFlowView: SelectPaymentMethodFlowContract.View by currentScope.inject()
+    private val selectIssuerFlowView: SelectIssuerFlowContract.View by currentScope.inject()
+    private val selectPayerCostFlowView: SelectPayerCostFlowContract.View by currentScope.inject()
 
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<android.view.View>
 
@@ -80,6 +96,7 @@ class PaymentFlowActivity : AppCompatActivity(), PaymentFlowContract.View {
 
     private fun configureNextStep() = nextStep.run {
         setOnClickListener {
+            hideKeyboard()
             presenter.nextStep()
         }
     }
@@ -98,7 +115,7 @@ class PaymentFlowActivity : AppCompatActivity(), PaymentFlowContract.View {
     }
 
     private fun getPaymentFlows() {
-        CoroutineScope(Dispatchers.Main).launch {
+        CoroutineScope(Dispatchers.IO).launch {
             presenter.getAllPaymentFlows()
         }
     }
@@ -112,40 +129,52 @@ class PaymentFlowActivity : AppCompatActivity(), PaymentFlowContract.View {
     }
 
     override fun showPaymentFlow(paymentFlows: List<PaymentFlowModel>) {
-        emptyViewContainer.visibility = View.GONE
 
-        paymentFlowAdapter.paymentFlowModels = paymentFlows
+        CoroutineScope(Dispatchers.Main).launch {
+            emptyViewContainer.visibility = View.GONE
+
+            paymentFlowAdapter.paymentFlowModels = paymentFlows
+        }
+
     }
 
     override fun showEmptyMessage() {
-        emptyViewContainer.visibility = View.VISIBLE
+        CoroutineScope(Dispatchers.Main).launch {
+            emptyViewContainer.visibility = View.VISIBLE
+        }
     }
 
     override fun showSelectAmountFlowView() {
         supportFragmentManager.beginTransaction().replace(
             R.id.flowContainer,
-            SelectAmountFlowFragment.newInstance("","")
+            selectAmountFlowView as Fragment
         ).commit()
     }
 
     override fun showSelectPaymentMethodFlowView() {
         supportFragmentManager.beginTransaction().replace(
             R.id.flowContainer,
-            SelectPaymentMethodFlowFragment.newInstance("","")
+            selectPaymentMethodFlowFlowView as Fragment
         ).commit()
     }
 
-    override fun showSelectIssuerFlowView() {
+    override fun showSelectIssuerFlowView(paymentMethod: PaymentMethod) {
+        selectIssuerFlowView.paymentMethod = paymentMethod
         supportFragmentManager.beginTransaction().replace(
             R.id.flowContainer,
-            SelectIssuerFlowFragment.newInstance("","")
+            selectIssuerFlowView as Fragment
         ).commit()
     }
 
-    override fun showSelectInstallmentsFlowView() {
+    override fun showSelectInstallmentsFlowView(amount: Int, paymentMethod: PaymentMethod, issuer: Issuer) {
+        selectPayerCostFlowView.apply { 
+            this.amount = amount
+            this.paymentMethod = paymentMethod
+            this.issuer = issuer
+        }
         supportFragmentManager.beginTransaction().replace(
             R.id.flowContainer,
-            SelectInstallmentsFlowFragment.newInstance("","")
+            selectPayerCostFlowView as Fragment
         ).commit()
     }
 
@@ -155,7 +184,47 @@ class PaymentFlowActivity : AppCompatActivity(), PaymentFlowContract.View {
     }
 
     override fun closePaymentFlowStepContainer() {
-        createPaymentFlow.text = if (presenter.isNewFlow)  "Crear Nuevo Pago" else "Continuar Pago"
+        createPaymentFlow.text = if (presenter.isNewFlow) "Crear Nuevo Pago" else "Continuar Pago"
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+    }
+
+    override fun enableNextStepButton() {
+        CoroutineScope(Dispatchers.Main).launch {
+            nextStep.apply {
+                isEnabled = true
+            }
+        }
+    }
+
+    override fun disableNextStepButton() {
+        CoroutineScope(Dispatchers.Main).launch {
+            nextStep.apply {
+                isEnabled = false
+            }
+        }
+    }
+
+    override fun onAmountChange(amount: Int) {
+        CoroutineScope(Dispatchers.IO).launch {
+            presenter.updateAmount(amount)
+        }
+    }
+
+    override fun onPaymentMethodSelected(paymentMethod: PaymentMethod) {
+        CoroutineScope(Dispatchers.IO).launch {
+            presenter.updatePaymentMethod(paymentMethod)
+        }
+    }
+
+    override fun onIssuerSelected(issuer: Issuer) {
+        CoroutineScope(Dispatchers.IO).launch {
+            presenter.updateIssuer(issuer)
+        }
+    }
+
+    override fun onPayerCostSelected(payerCost: PayerCost) {
+        CoroutineScope(Dispatchers.IO).launch {
+            presenter.updatePayerCost(payerCost)
+        }
     }
 }

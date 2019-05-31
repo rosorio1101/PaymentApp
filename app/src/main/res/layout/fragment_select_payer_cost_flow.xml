@@ -18,11 +18,11 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:textAlignment="center"
             android:textColor="@color/colorPrimary"
-            android:text="Selecciona método de pago"
+            android:text="Selecciona Cuotas"
             style="@style/TextAppearance.AppCompat.Title"/>
 
     <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/paymentMethodRecyclerView"
+            android:id="@+id/payerCostsRecyclerView"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:paddingBottom="8dp"

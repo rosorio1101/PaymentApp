@@ -8,4 +8,12 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="AppTheme.Button" parent="TextAppearance.AppCompat.Widget.Button.Borderless.Colored">
+
+    </style>
+
+    <style name="AppTheme.Button.NextStep" parent="AppTheme.Button">
+        <item name="android:background">@drawable/next_step_background</item>
+    </style>
+
 </resources>

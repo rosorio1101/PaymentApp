@@ -14,7 +14,7 @@ data class PaymentFlowModel(
     companion object {
         fun from(paymentFlow: PaymentFlow): PaymentFlowModel = PaymentFlowModel(
             paymentFlow.id,
-            "$%d".format(paymentFlow.amount?.toString() ?: 0),
+            "$%s".format(paymentFlow.amount?.toString() ?: 0),
             paymentFlow.paymentMethod?.name ?: "No seleccionado",
             paymentFlow.issuer?.name ?: "No seleccionado",
             paymentFlow.payerCost?.recommendedMessage ?: "No seleccionado",

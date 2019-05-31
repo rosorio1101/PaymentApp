@@ -1,5 +1,7 @@
 package com.rosorio.mercadopago.domain.entity
 
+import java.io.Serializable
+
 data class PaymentMethod(
     val id: String,
     val name: String,
@@ -15,4 +17,4 @@ data class PaymentMethod(
     val accreditationTime: Int,
     val financialInstitutions: List<String>,
     val processingModes: List<String>
-)
+): Serializable

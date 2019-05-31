@@ -1,5 +1,7 @@
 package com.rosorio.mercadopago.domain.entity
 
+import java.io.Serializable
+
 enum class State {
     CREATED, IN_PROGRESS, FINISHED
 }
@@ -11,7 +13,7 @@ data class PaymentFlow(
     var issuer: Issuer? = null,
     var payerCost: PayerCost? = null,
     var state: State? = State.CREATED
-): Comparable<PaymentFlow> {
+): Comparable<PaymentFlow>, Serializable {
     override fun compareTo(other: PaymentFlow): Int {
         return when {
             this.id > other.id -> 1

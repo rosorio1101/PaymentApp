@@ -16,8 +16,9 @@ class PaymentFlowViewHolder(parent: ViewGroup) :
     fun onBind(paymentFlow: PaymentFlowModel){
         itemView.findViewById<AppCompatTextView>(R.id.paymentFlowId).text = paymentFlow.id.toString()
         itemView.findViewById<AppCompatTextView>(R.id.paymentMethodName).text = paymentFlow.paymentMethodName
-        itemView.findViewById<AppCompatTextView>(R.id.issuerdName).text = paymentFlow.issuerName
+        itemView.findViewById<AppCompatTextView>(R.id.issuerName).text = paymentFlow.issuerName
         itemView.findViewById<AppCompatTextView>(R.id.recommendedMessage).text = paymentFlow.payerCostSelected
         itemView.findViewById<AppCompatTextView>(R.id.paymentFlowState).text = paymentFlow.state
+        itemView.findViewById<AppCompatTextView>(R.id.paymentFlowAmount).text = paymentFlow.amount
     }
 }
